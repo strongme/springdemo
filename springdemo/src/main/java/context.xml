@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-3.1.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd
+	">
+
+	<!-- <context:annotation-config/> -->
+	<!-- 下面这个标签包含上面那个标签的所有功能 -->
+	<context:component-scan base-package="org.strongme.walter">
+		<!-- <context:include-filter type="regex" expression="org.strongme.walter.springidol"/> -->	
+		<!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Component"/> -->
+	</context:component-scan>
+
+	<!-- 开启注解生成的aspect，即开启@Aspect功能 
+		Enables the use of the @AspectJ style of Spring AOP.  
+	-->
+	<aop:aspectj-autoproxy/>
+	
+	<!-- <bean id="walter" class="org.strongme.walter.springidol.Walter" /> -->
+
+	<bean id="jaker" class="org.strongme.walter.springidol.Jaker" />
+
+	<!-- 读取'classpath'下的song.properties文件 -->
+	<util:properties id="songs" location="classpath:song.properties" />
+
+	<bean id="carl" class="org.strongme.walter.springidol.Instrumentalist">
+		<property name="song"
+			value=" Song from kenny #{T(java.lang.Math).PI}    #{'Jkas'.toUpperCase()} #{jarry.song}" />
+		<property name="instrument">
+			<bean class="org.strongme.walter.springidol.Piano"/>
+		</property>
+	</bean>
+
+	<bean id="hank" class="org.strongme.walter.springidol.OneManBand">
+		<property name="instruments">
+			<!-- <list> <ref bean="saxophone"/> <ref bean="piano"/> </list> -->
+			<map>
+				<entry key="PIANO" value-ref="piano" />
+				<entry key="SAXOPHONE" value-ref="saxophone" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="jarry" class="org.strongme.walter.springidol.Instrumentalist"
+		p:instrument-ref="piano" p:song="Kiss Me In The Rain" />
+
+	<!--instrument then make it with annotation -->
+	<!-- <bean id="saxophone" class="org.strongme.walter.springidol.Saxophone" 
+		/> <bean id="piano" class="org.strongme.walter.springidol.Piano"/> -->
+
+	<bean id="kenny" class="org.strongme.walter.springidol.Instrumentalist">
+		<property name="song" value="#{systemEnvironment['JAVA_HOME']}" />
+		<!-- <property name="instrument" ref="piano"/> -->
+		<property name="instrument">
+			<bean class="org.strongme.walter.springidol.Piano" />
+		</property>
+	</bean>
+
+	<!--By default, all Spring beans are singletons. -->
+	<bean id="ticket" class="org.strongme.walter.springidol.Ticket"
+		scope="prototype" />
+
+	<bean id="theStage" class="org.strongme.walter.springidol.Stage"
+		factory-method="getInstance" />
+
+	<bean id="sonnet29" class="org.strongme.walter.springidol.Sonnet29" />
+
+	<bean id="poeticDuke" class="org.strongme.walter.springidol.PoeticJuggler"
+		init-method="actionBeforeStage" destroy-method="actionAfterStage"
+		scope="prototype">
+		<constructor-arg value="25" />
+		<constructor-arg ref="sonnet29" />
+	</bean>
+
+
+	<bean id="Duke" class="org.strongme.walter.springidol.Juggler">
+		<constructor-arg value="15" />
+	</bean>
+
+	<bean id="ak47" class="org.strongme.walter.realweapon.AK47"></bean>
+
+	<bean id="c4" class="org.strongme.walter.realweapon.C4"></bean>
+
+	<bean id="army" class="org.strongme.walter.realweapon.Army">
+		<property name="gun" ref="ak47"></property>
+		<property name="bomb" ref="c4"></property>
+	</bean>
+
+	<bean id="guard" class="org.strongme.walter.realweapon.Guard"></bean>
+
+	<bean id="audience" class="org.strongme.walter.springidol.Audience"/>
+	
+	<bean id="magician" class="org.strongme.walter.springidol.Magician"/>
+	
+	<bean id="volunteer" class="org.strongme.walter.springidol.Volunteer"/>
+	
+	<bean id="graciousContestant" class="org.strongme.walter.springidol.GraciousContestant"/>
+	<aop:config proxy-target-class="true">
+	
+		<aop:pointcut expression="execution(* org.strongme.walter.springidol.Performer.perform(..))" id="onPerform"/>
+
+		<aop:aspect ref="guard">
+			<aop:pointcut expression="execution(* *.fight())" id="guarding" />
+			<aop:before method="shotBeforeGun" pointcut-ref="guarding" />
+			<aop:after method="shotAfterGun" pointcut-ref="guarding" />
+		</aop:aspect>
+		
+		<aop:aspect ref="audience">
+			<!-- <aop:before pointcut-ref="onPerform" method="takeSeats"/>
+			<aop:before method="turnOffCellPhones" pointcut-ref="onPerform"/>
+			<aop:after-returning method="applaud" pointcut-ref="onPerform"/>
+			<aop:after-throwing method="demandRefund" pointcut-ref="onPerform"/> -->
+			<aop:around method="calculateTime" pointcut-ref="onPerform"/>
+		</aop:aspect>
+		
+		<aop:aspect ref="magician">
+			<aop:pointcut expression="execution(* org.strongme.walter.springidol.Thinker.thinkOfSomething(String)) and args(thoughts)" id="thinking"/>
+			<aop:before method="interceptThoughts" pointcut-ref="thinking" arg-names="thoughts"/>
+		</aop:aspect>
+		
+		<aop:aspect>
+					<aop:declare-parents types-matching="org.strongme.walter.springidol.Performer+" 
+														implement-interface="org.strongme.walter.springidol.Contestant"
+														delegate-ref="graciousContestant"
+														/>
+		</aop:aspect>
+		
+	</aop:config>
+
+
+
+	<!--for log4j -->
+	<bean id="log4jInitializer"
+		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="staticMethod">
+			<value>org.springframework.util.Log4jConfigurer.initLogging</value>
+		</property>
+		<property name="arguments">
+			<list>
+				<value>classpath:log4j.xml</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>
