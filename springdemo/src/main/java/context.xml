@@ -92,10 +92,10 @@
 
 	<bean id="c4" class="org.strongme.walter.realweapon.C4"></bean>
 
-	<bean id="army" class="org.strongme.walter.realweapon.Army">
+<!-- 	<bean id="army" class="org.strongme.walter.realweapon.Army">
 		<property name="gun" ref="ak47"></property>
 		<property name="bomb" ref="c4"></property>
-	</bean>
+	</bean> -->
 
 	<bean id="guard" class="org.strongme.walter.realweapon.Guard"></bean>
 
@@ -106,6 +106,7 @@
 	<bean id="volunteer" class="org.strongme.walter.springidol.Volunteer"/>
 	
 	<bean id="graciousContestant" class="org.strongme.walter.springidol.GraciousContestant"/>
+	
 	<aop:config proxy-target-class="true">
 	
 		<aop:pointcut expression="execution(* org.strongme.walter.springidol.Performer.perform(..))" id="onPerform"/>
@@ -134,6 +135,10 @@
 														implement-interface="org.strongme.walter.springidol.Contestant"
 														delegate-ref="graciousContestant"
 														/>
+					 <aop:declare-parents types-matching="org.strongme.walter.weapon.Soldier+"
+															implement-interface="org.strongme.walter.springidol.Fly"
+															delegate-ref="flyBird"
+															/>			 			
 		</aop:aspect>
 		
 	</aop:config>

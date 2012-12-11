@@ -1,7 +1,6 @@
 package org.strongme.walter.springidol;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.strongme.walter.springidol.exception.PerformanceExecpion;

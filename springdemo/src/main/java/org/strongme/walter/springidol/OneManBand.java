@@ -1,6 +1,5 @@
 package org.strongme.walter.springidol;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.strongme.walter.springidol.exception.PerformanceExecpion;

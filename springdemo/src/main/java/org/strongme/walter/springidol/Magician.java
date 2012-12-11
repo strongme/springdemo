@@ -5,7 +5,7 @@ public class Magician implements MindReader {
 	private String thoughts;
 
 	public void interceptThoughts(String thoughts) {
-		System.out.println("Intercepting the volunteer's thoughts...");
+		System.out.println("From Maginican Intercepting the volunteer's thoughts...");
 		this.thoughts = thoughts;
 	}
 

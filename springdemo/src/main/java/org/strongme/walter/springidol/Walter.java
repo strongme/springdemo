@@ -1,6 +1,5 @@
 package org.strongme.walter.springidol;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.strongme.walter.springidol.exception.PerformanceExecpion;
 
 public class Walter implements Performer {

@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.strongme.walter.springidol.Contestant;
 import org.strongme.walter.springidol.FireTheAudience;
-import org.strongme.walter.springidol.Juggler;
 import org.strongme.walter.springidol.Performer;
 import org.strongme.walter.springidol.exception.PerformanceExecpion;
 
